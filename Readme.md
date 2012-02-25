@@ -1,6 +1,6 @@
 This is an in place editor mixin written in coffeescript for a backbone view.
 
-It defines a method for including mixins (@mixin, directly inspired by: https://github.com/jashkenas/coffee-script/issues/452#issuecomment-3699651) and the mixin itself Backbone.Mixin.Editable
+It defines a method for including mixins (```@mixin```, directly inspired by: https://github.com/jashkenas/coffee-script/issues/452#issuecomment-3699651) and the mixin itself Backbone.Mixin.Editable
 
 This project was extracted from a rails app so usage instructions pertain to rails.
 Starting in your project root, download the coffeescript file:
@@ -38,25 +38,25 @@ Now, to make a field in your template editable, regardless of your templating en
 To edit ```@model.get('options')[3].text:```
 
     <div class="editable" data-object="options" data-index="3" data-key="text">
-      Some Editable Text
+      <%= @model.get('options')[3].text %>
     </div>
     
 To edit ```@model.get('options').text:```
 
     <div class="editable" data-object="options" data-key="text">
-      Some Editable Text
+      <%= @model.get('options').text %>
     </div>
     
 To edit ```@model.get('options')[3]:```
 
     <div class="editable" data-object="options" data-index="3">
-      Some Editable Text
+      <%= @model.get('options')[3] %>
     </div>
     
 To edit ```@model.get('text')```
 
     <div class="editable" data-key="text">
-      Some Editable Text
+      <%= @model.get('text') %>
     </div>
     
 All of these fire a change event and save the model. If you tie render to your models change event, then the model will redraw with the new data.

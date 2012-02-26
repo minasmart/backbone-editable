@@ -1,3 +1,5 @@
+#Backbone Editable#
+
 This is an in place editor mixin written in coffeescript for a backbone view.
 
 It defines a method for including mixins (```@mixin```, directly inspired by: https://github.com/jashkenas/coffee-script/issues/452#issuecomment-3699651) and the mixin itself Backbone.Mixin.Editable
@@ -32,6 +34,11 @@ Finally, include the mixin in your view:
         @model.on 'change', @render, this
       
       ...
+
+*NOTE:* All model save events are silent by default. This can be changed
+by calling ```@initEditable(silent_events: false)```. This setting can
+be overridden on your editable by setting the data attribute
+```data-silent='true'``` or ```data-silent='false'```
 
 Now, to make a field in your template editable, regardless of your templating engine you need to set a class and some data attributes
 

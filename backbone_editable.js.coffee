@@ -12,7 +12,8 @@ class Backbone.Mixin.Editable
     'blur   .editable input': '_setKey'
     'keyup  .editable input': '_setKeyEnter'
 
-  initEditable: ->
+  initEditable: (options = {}) ->
+    @_setSilent(options)
     _.extend @events, @_editable_events
     @delegateEvents()
       
@@ -33,17 +34,44 @@ class Backbone.Mixin.Editable
 
   _setKey: (e) ->
     $el = $(e.currentTarget).parent()
-    # Store the value in the model
-    Backbone.Mixin.Editable._SetValue
+    if $el.hasClass('editing')
+      console.log 'setting...'
+      # Make sure the event is triggered twice
+      # Store the value in the model
+      [key, value] = Backbone.Mixin.Editable._NewAttributes
+        model: @model,
+        value: $el.find('input').val(),
+        el: $el
+      @model.save key, value,
+        wait: true, silent: @_getSilent($el),
+        success: => @_removeInput($el)
+
+  _removeInput: ($el) =>
+    # Get rid of the text box, and set the new
+    # (or old) value.
+    value = Backbone.Mixin.Editable._GetValue
       model: @model,
-      value: $el.find('input').val(),
       el: $el
-    @model.save wait: true, silent: true
-    @model.trigger 'change'
+    $el.removeClass('editing').html(value)
  
   _setKeyEnter: (e) ->
     if e.keyCode is 13
-      @_setKey(e)
+      # Trigger the blur event
+      $(e.currentTarget).blur()
+
+  _getSilent: ($el) ->
+    el_silent = $el.data 'silent'
+    if (el_silent is @silent) or (el_silent is undefined)
+      @silent
+    else
+      el_silent
+
+  _setSilent: (options) ->
+    if options['silent_events'] or options['silent_events'] is undefined
+      @silent = true
+    else
+      @silent = false
+
 
   @_GetValue = (options = {}) ->
     model   = options['model']
@@ -66,7 +94,7 @@ class Backbone.Mixin.Editable
       value = model.escape key
     return value
 
-  @_SetValue = (options = {}) ->
+  @_NewAttributes = (options = {}) ->
     model   = options['model']
     value   = options['value']
     silent  = false
@@ -81,21 +109,17 @@ class Backbone.Mixin.Editable
       new_index   = _.clone new_object[index]
       new_index[key] = value
       new_object[index] = new_index
-      model.set object, new_object,
-        silent: silent
+      [object, new_object]
     # Object with a key
     else if object and key
       new_object = _.clone model.get(object)
       new_object[key] = value
-      model.set object, new_object,
-        silent: silent
+      [object, new_object]
     # Object that is an array
     else if object and (index != undefined)
       new_object = _.clone model.get(object)
       new_object[index] = value
-      model.set object, new_object,
-        silent: silent
+      [object, new_object]
     # Just accessing by a key
     else
-      model.set key, value,
-        silent: silent
+      [key, value]

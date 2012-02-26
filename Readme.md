@@ -35,7 +35,7 @@ Finally, include the mixin in your view:
       
       ...
 
-*NOTE:* All model save events are silent by default. This can be changed
+**NOTE:** All model save events are silent by default. This can be changed
 by calling ```@initEditable(silent_events: false)```. This setting can
 be overridden on your editable by setting the data attribute
 ```data-silent='true'``` or ```data-silent='false'```

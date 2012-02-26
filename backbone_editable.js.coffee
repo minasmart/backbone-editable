@@ -35,13 +35,13 @@ class Backbone.Mixin.Editable
   _setKey: (e) ->
     $el = $(e.currentTarget).parent()
     if $el.hasClass('editing')
-      console.log 'setting...'
-      # Make sure the event is triggered twice
-      # Store the value in the model
+      # Get the results of the edit
       [key, value] = Backbone.Mixin.Editable._NewAttributes
         model: @model,
         value: $el.find('input').val(),
         el: $el
+      # Save the model and remove the input if
+      # The settings were alright
       @model.save key, value,
         wait: true, silent: @_getSilent($el),
         success: => @_removeInput($el)
@@ -82,16 +82,16 @@ class Backbone.Mixin.Editable
     value = null
     # Full complexity
     if object and (index != undefined) and key
-      value = _.escape model.get(object)[index][key]
+      value = model.get(object)[index][key]
     # Object with a key
     else if object and key
-      value = _.escape model.get(object)[key]
+      value = model.get(object)[key]
     # Object that is an array
     else if object and (index != undefined)
-      value = _.escape model.get(object)[index]
+      value = model.get(object)[index]
     # Just accessing by a key
     else
-      value = model.escape key
+      value = model.get key
     return value
 
   @_NewAttributes = (options = {}) ->

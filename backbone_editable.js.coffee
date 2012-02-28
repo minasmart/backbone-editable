@@ -35,6 +35,10 @@ class Backbone.Mixin.Editable
   _setKey: (e) ->
     $el = $(e.currentTarget).parent()
     if $el.hasClass('editing')
+      # Get the old value in case of an error
+      old_value = Backbone.Mixin.Editable._GetValue
+        model: @model,
+        el: $el
       # Get the results of the edit
       [key, value] = Backbone.Mixin.Editable._NewAttributes
         model: @model,
@@ -44,7 +48,12 @@ class Backbone.Mixin.Editable
       # The settings were alright
       @model.save key, value,
         wait: true, silent: @_getSilent($el),
-        success: => @_removeInput($el)
+        success: => @_removeInput($el),
+        error: (model, error) =>
+          $el.find('input').addClass('error').
+            val(old_value).
+            focus()
+          @model.trigger 'error', model, error
 
   _removeInput: ($el) =>
     # Get rid of the text box, and set the new

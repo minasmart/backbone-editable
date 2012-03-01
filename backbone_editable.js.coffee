@@ -61,6 +61,9 @@ class Backbone.Mixin.Editable
     value = Backbone.Mixin.Editable._GetValue
       model: @model,
       el: $el
+    precision = $el.data 'precision'
+    if precision
+      value = parseFloat(value).toFixed(precision)
     $el.removeClass('editing').html(value)
  
   _setKeyEnter: (e) ->

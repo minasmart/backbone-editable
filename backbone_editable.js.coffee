@@ -14,6 +14,7 @@ class Backbone.Mixin.Editable
 
   initEditable: (options = {}) ->
     @_setSilent(options)
+    @events = {} unless @events
     _.extend @events, @_editable_events
     @delegateEvents()
       

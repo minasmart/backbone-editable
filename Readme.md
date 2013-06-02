@@ -66,7 +66,7 @@ To edit ```@model.get('text')```
       <%= @model.get('text') %>
     </div>
     
-All of these fire a change event and save the model. If you tie render to your models change event, then the model will redraw with the new data.
+All of these save the model and fire a `sync` event. If you tie `render` to your model's `sync` event, then the model will redraw with the new data.
 
 ### To be implemented soon
 - Minimum/maximum text field width
